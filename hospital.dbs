@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="hospital" id="Project-645" database="PostgreSQL" >
+	<comment><![CDATA[scheme]]></comment>
+	<schema name="hospital" >
+		<table name="appointment_service" prior="appointment_servi" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="appointment_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="service_id" type="integer" jt="4" mandatory="y" />
+			<index name="pk_appointment_servi" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_appointment_" to_schema="hospital" to_table="appointments" delete_action="cascade" update_action="cascade" >
+				<fk_column name="appointment_id" pk="id" />
+			</fk>
+			<fk name="fk_appointment_services" to_schema="hospital" to_table="services" delete_action="cascade" update_action="cascade" >
+				<fk_column name="service_id" pk="id" />
+			</fk>
+		</table>
+		<table name="appointment_services" prior="appointment_srvices" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="appointment_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="service_id" type="integer" jt="4" mandatory="y" />
+			<index name="pk_appointment_services" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_appointment_services" to_schema="hospital" to_table="appointments" >
+				<fk_column name="appointment_id" pk="id" />
+			</fk>
+		</table>
+		<table name="appointments" prior="tbl" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="patient_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="doctor_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="clinic_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="date" type="date" jt="91" mandatory="y" />
+			<column name="start_time" type="date" jt="91" mandatory="y" />
+			<column name="end_time" type="date" jt="91" mandatory="y" />
+			<column name="status" type="varchar" length="50" jt="12" mandatory="y" />
+			<index name="unq_appointments_id" unique="UNIQUE_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_appointments_patients" to_schema="hospital" to_table="patients" delete_action="cascade" update_action="cascade" >
+				<fk_column name="patient_id" pk="id" />
+			</fk>
+			<fk name="fk_appointments_doctors" to_schema="hospital" to_table="doctors" delete_action="cascade" update_action="cascade" >
+				<fk_column name="doctor_id" pk="id" />
+			</fk>
+		</table>
+		<table name="clinic_billing" prior="clinic_" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="clinic_id" type="integer" jt="4" mandatory="y" />
+			<column name="appointment_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="amount" type="decimal" length="10" decimal="2" jt="3" mandatory="y" />
+			<column name="paid" type="boolean" jt="16" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+			</column>
+			<index name="pk_clinic_billing" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_clinic_billing_clinics" to_schema="hospital" to_table="clinics" delete_action="cascade" update_action="cascade" >
+				<fk_column name="clinic_id" pk="id" />
+			</fk>
+			<fk name="fk_clinic_billing_appointments" to_schema="hospital" to_table="appointments" delete_action="cascade" update_action="cascade" >
+				<fk_column name="appointment_id" pk="id" />
+			</fk>
+		</table>
+		<table name="clinic_ratings" prior="clinic" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="clinic_id" type="integer" jt="4" mandatory="y" />
+			<column name="patient_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="rating" type="integer" jt="4" mandatory="y" />
+			<index name="pk_clinic_ratings" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_clinic_ratings_clinics" to_schema="hospital" to_table="clinics" delete_action="cascade" update_action="cascade" >
+				<fk_column name="clinic_id" pk="id" />
+			</fk>
+			<fk name="fk_clinic_ratings_patients" to_schema="hospital" to_table="patients" delete_action="cascade" update_action="cascade" >
+				<fk_column name="patient_id" pk="id" />
+			</fk>
+		</table>
+		<table name="clinic_services" prior="clinic_servicea" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="clinic_id" type="integer" jt="4" mandatory="y" />
+			<column name="sevice_id" type="integer" jt="4" mandatory="y" />
+			<index name="pk_clinic_services" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_clinic_services_clinics" to_schema="hospital" to_table="clinics" >
+				<fk_column name="clinic_id" pk="id" />
+			</fk>
+			<fk name="fk_clinic_services_services" to_schema="hospital" to_table="services" delete_action="cascade" update_action="cascade" >
+				<fk_column name="sevice_id" pk="id" />
+			</fk>
+		</table>
+		<table name="clinics" prior="tbl" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="address" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="city" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="state" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="zip_code" type="varchar" length="100" jt="12" mandatory="y" />
+			<index name="pk_clinics" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="doctor_availability" prior="doctor_availabili" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="doctor_id" type="integer" jt="4" mandatory="y" />
+			<column name="clinic_id" type="integer" jt="4" mandatory="y" />
+			<column name="day_of_week" type="varchar" length="10" jt="12" mandatory="y" />
+			<column name="start_time" type="date" jt="91" mandatory="y" />
+			<column name="end_time" type="date" jt="91" mandatory="y" />
+			<index name="pk_doctor_availability" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_doctor_availability_doctors" to_schema="hospital" to_table="doctors" delete_action="cascade" update_action="cascade" >
+				<fk_column name="doctor_id" pk="id" />
+			</fk>
+			<fk name="fk_doctor_availability_clinics" to_schema="hospital" to_table="clinics" delete_action="cascade" update_action="cascade" >
+				<fk_column name="clinic_id" pk="id" />
+			</fk>
+		</table>
+		<table name="doctor_certifications" prior="doctor_certificati" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="doctor_id" type="integer" jt="4" mandatory="y" />
+			<column name="certification" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="education_center" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="year" type="integer" jt="4" mandatory="y" />
+			<index name="pk_doctor_certifications" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_doctor_certifications" to_schema="hospital" to_table="doctors" delete_action="cascade" update_action="cascade" >
+				<fk_column name="doctor_id" pk="id" />
+			</fk>
+		</table>
+		<table name="doctor_education" prior="doctor" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="doctor_id" type="integer" jt="4" mandatory="y" />
+			<column name="degree" type="varchar" length="10" jt="12" mandatory="y" />
+			<column name="institution" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="year" type="integer" jt="4" mandatory="y" />
+			<index name="pk_doctor_education" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_doctor_education_doctors" to_schema="hospital" to_table="doctors" delete_action="cascade" update_action="cascade" >
+				<fk_column name="doctor_id" pk="id" />
+			</fk>
+		</table>
+		<table name="doctor_notes" prior="doctor_" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="doctor_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="patient_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="appointment_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="note" type="text" length="600" jt="12" mandatory="y" />
+			<index name="pk_doctor_notes" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_doctor_notes_doctors" to_schema="hospital" to_table="doctors" delete_action="cascade" update_action="cascade" >
+				<fk_column name="doctor_id" pk="id" />
+			</fk>
+			<fk name="fk_doctor_notes_patients" to_schema="hospital" to_table="patients" delete_action="cascade" update_action="cascade" >
+				<fk_column name="patient_id" pk="id" />
+			</fk>
+			<fk name="fk_doctor_notes_appointments" to_schema="hospital" to_table="appointments" delete_action="cascade" update_action="cascade" >
+				<fk_column name="appointment_id" pk="id" />
+			</fk>
+		</table>
+		<table name="doctor_ratings" prior="doctor_rati" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="doctor_id" type="integer" jt="4" mandatory="y" />
+			<column name="patient_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="rating" type="integer" jt="4" mandatory="y" />
+			<index name="pk_doctor_ratings" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_doctor_ratings_doctors" to_schema="hospital" to_table="doctors" delete_action="cascade" update_action="cascade" >
+				<fk_column name="doctor_id" pk="id" />
+			</fk>
+			<fk name="fk_doctor_ratings_patients" to_schema="hospital" to_table="patients" delete_action="cascade" update_action="cascade" >
+				<fk_column name="patient_id" pk="id" />
+			</fk>
+		</table>
+		<table name="doctor_specialties" prior="doctor_spesialties" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="doctor_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="specialty_id" type="bigint" jt="-5" mandatory="y" />
+			<index name="pk_doctor_specialties" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_doctor_specialties_doctors" to_schema="hospital" to_table="doctors" delete_action="cascade" update_action="cascade" >
+				<fk_column name="doctor_id" pk="id" />
+			</fk>
+			<fk name="fk_doctor_specialties" to_schema="hospital" to_table="specialities" delete_action="cascade" update_action="cascade" >
+				<fk_column name="specialty_id" pk="id" />
+			</fk>
+		</table>
+		<table name="doctors" prior="tbl" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="first_name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="last_name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="license_number" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="year_of_experience" type="int4range" jt="1111" mandatory="y" />
+			<column name="user_id" type="bigint" jt="-5" mandatory="y" todo="2" />
+			<index name="pk_doctors" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_doctors_users" to_schema="hospital" to_table="users" delete_action="cascade" update_action="cascade" >
+				<fk_column name="user_id" pk="id" />
+			</fk>
+		</table>
+		<table name="medical_procedure_history" prior="medical_procedure_" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="patient_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="medical_procedure_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="date_of_prosedure" type="date" jt="91" mandatory="y" />
+			<index name="pk_medical_procedure_history" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_medical_procedure_history" to_schema="hospital" to_table="patients" delete_action="cascade" update_action="cascade" >
+				<fk_column name="patient_id" pk="id" />
+			</fk>
+			<fk name="fk_medical_procedure" to_schema="hospital" to_table="medical_procedures" delete_action="cascade" update_action="cascade" >
+				<fk_column name="medical_procedure_id" pk="id" />
+			</fk>
+		</table>
+		<table name="medical_procedures" prior="medical_procrdures" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="description" type="text" jt="12" mandatory="y" />
+			<index name="pk_medical_procedures" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="patient_billing" prior="patient_" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="patient_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="appointment_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="amount" type="real" jt="7" mandatory="y" />
+			<column name="paid" type="boolean" jt="16" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+			</column>
+			<index name="pk_patient_billing" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_patient_billing_patients" to_schema="hospital" to_table="patients" delete_action="cascade" update_action="cascade" >
+				<fk_column name="patient_id" pk="id" />
+			</fk>
+			<fk name="fk_patient_billing" to_schema="hospital" to_table="appointments" delete_action="cascade" update_action="cascade" >
+				<fk_column name="appointment_id" pk="id" />
+			</fk>
+		</table>
+		<table name="patients" prior="tbl" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="first_name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="last_name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="gender" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="dob" type="date" jt="91" mandatory="y" />
+			<column name="user_id" type="integer" jt="4" mandatory="y" todo="2" />
+			<index name="pk_patients" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_patients_users" to_schema="hospital" to_table="users" delete_action="cascade" update_action="cascade" options=" " >
+				<fk_column name="user_id" pk="id" />
+			</fk>
+		</table>
+		<table name="payments" prior="pa" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="clinic_id" type="integer" jt="4" mandatory="y" />
+			<column name="appointment_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="amount" type="real" jt="7" mandatory="y" />
+			<column name="paid" type="boolean" jt="16" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+			</column>
+			<index name="pk_payments" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_payments_clinics" to_schema="hospital" to_table="clinics" delete_action="cascade" update_action="cascade" >
+				<fk_column name="clinic_id" pk="id" />
+			</fk>
+			<fk name="fk_payments_appointments" to_schema="hospital" to_table="appointments" delete_action="cascade" update_action="cascade" >
+				<fk_column name="appointment_id" pk="id" />
+			</fk>
+		</table>
+		<table name="prescription_drugs" prior="prescription" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="dosage" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="instructions" type="text" jt="12" mandatory="y" />
+			<index name="pk_prescription_drugs" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="prescriptions" prior="prescrip" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="doctor_id" type="integer" jt="4" mandatory="y" />
+			<column name="patient_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="appointment_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="prescription_drug_id" type="integer" jt="4" mandatory="y" />
+			<column name="quantity" type="integer" jt="4" mandatory="y" />
+			<index name="pk_prescriptions" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_prescriptions_doctors" to_schema="hospital" to_table="doctors" delete_action="cascade" update_action="cascade" >
+				<fk_column name="doctor_id" pk="id" />
+			</fk>
+			<fk name="fk_prescriptions_patients" to_schema="hospital" to_table="patients" delete_action="cascade" update_action="cascade" >
+				<fk_column name="patient_id" pk="id" />
+			</fk>
+			<fk name="fk_prescriptions_appointments" to_schema="hospital" to_table="appointments" delete_action="cascade" update_action="cascade" >
+				<fk_column name="appointment_id" pk="id" />
+			</fk>
+			<fk name="fk_prescriptions" to_schema="hospital" to_table="prescription_drugs" delete_action="cascade" update_action="cascade" >
+				<fk_column name="prescription_drug_id" pk="id" />
+			</fk>
+		</table>
+		<table name="services" prior="ser" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="description" type="text" jt="12" />
+			<column name="price" type="real" jt="7" mandatory="y" />
+			<index name="pk_services" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="specialities" prior="spe" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="255" jt="12" mandatory="y" />
+			<index name="pk_specialities" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="users" prior=" users" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="username" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="password" type="varchar" jt="12" mandatory="y" />
+			<column name="email" type="varchar" jt="12" mandatory="y" />
+			<column name="phone" type="varchar" jt="12" mandatory="y" />
+			<column name="addrees" type="varchar" jt="12" mandatory="y" />
+			<index name="pk_ users" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-3ec" show_relation="columns" >
+		<callout x="48" y="48" pointer="Round" >
+			<comment><![CDATA[This is a layout - a diagram with tools.
+- Right-click the layout to create new tables. 
+- Double-click table headers to edit. 
+- For a better understanding of the schema, create multiple layouts.
+- The schema will be saved to the model file. 
+- Later, you can connect to any database and deploy the schema into the database.]]></comment>
+		</callout>
+	</layout>
+	<layout name="clinic" id="Layout-17d1" joined_routing="y" show_column_type="y" show_schema_name="y" show_page_borders="y" show_relation="columns" >
+		<comment><![CDATA[clinic]]></comment>
+		<entity schema="hospital" name="appointment_service" color="C1D8EE" x="112" y="48" />
+		<entity schema="hospital" name="appointments" color="C1D8EE" x="160" y="256" />
+		<entity schema="hospital" name="clinic_billing" color="C1D8EE" x="896" y="240" />
+		<entity schema="hospital" name="clinic_ratings" color="C1D8EE" x="1264" y="832" />
+		<entity schema="hospital" name="clinic_services" color="C1D8EE" x="1296" y="640" />
+		<entity schema="hospital" name="clinics" color="C1D8EE" x="1328" y="192" />
+		<entity schema="hospital" name="doctor_availability" color="C1D8EE" x="592" y="688" />
+		<entity schema="hospital" name="doctor_certifications" color="C1D8EE" x="1584" y="336" />
+		<entity schema="hospital" name="doctor_education" color="C1D8EE" x="1552" y="128" />
+		<entity schema="hospital" name="doctor_notes" color="C1D8EE" x="864" y="880" />
+		<entity schema="hospital" name="doctor_ratings" color="C1D8EE" x="480" y="896" />
+		<entity schema="hospital" name="doctor_specialties" color="C1D8EE" x="1280" y="432" />
+		<entity schema="hospital" name="doctors" color="C1D8EE" x="192" y="624" />
+		<entity schema="hospital" name="medical_procedure_history" color="C1D8EE" x="48" y="880" />
+		<entity schema="hospital" name="medical_procedures" color="C1D8EE" x="736" y="96" />
+		<entity schema="hospital" name="patient_billing" color="C1D8EE" x="1008" y="640" />
+		<entity schema="hospital" name="patients" color="C1D8EE" x="464" y="48" />
+		<entity schema="hospital" name="payments" color="C1D8EE" x="1008" y="64" />
+		<entity schema="hospital" name="prescription_drugs" color="C1D8EE" x="1616" y="576" />
+		<entity schema="hospital" name="prescriptions" color="C1D8EE" x="720" y="448" />
+		<entity schema="hospital" name="services" color="C1D8EE" x="1488" y="768" />
+		<entity schema="hospital" name="specialities" color="C1D8EE" x="48" y="464" />
+		<entity schema="hospital" name="users" color="3986C1" x="448" y="288" />
+	</layout>
+	<layout name="patients" id="Layout-559" joined_routing="y" show_column_type="y" show_schema_name="y" show_page_borders="y" show_relation="columns" />
+</project>
